@@ -10,8 +10,48 @@ declare module "opencv" {
         pngCompression?: number;
     }
 
-    interface IContour {
+    interface TPoint {
+        x: number;
+        y: number;
+    }
 
+    interface TSize {
+        width: number;
+        height: number;
+    }
+
+    interface TRect {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    }
+
+    interface TMinAreaRect {
+        angle: number;
+        size: TSize;
+        points: TPoint[];
+    }
+
+    interface TMoments {
+        m00: number;
+        m10: number;
+        m01: number;
+        m11: number;
+    }
+
+    interface IContour {
+        point(pos: number, index: number): TPoint;
+        size(): number;
+        cornerCount(pos: number): number;
+        area(pos: number): number;
+        arcLength(pos: number, isClosed: boolean): number;
+        approxPolyDP(pos: number, epsilon: number, isClosed: boolean);
+        convexHull(pos: number, clockwise: boolean);
+        boundingRect(pos: number): TRect;
+        minAreaRect(pos: number): TMinAreaRect;
+        isConvex(pos: number): boolean;
+        moments(pos: number): TMoments;
     }
 
     interface IMatrix {
@@ -144,12 +184,54 @@ declare module "opencv" {
 
         Eye(w: number, h: number): IMatrix;
 
+        detectObject(classifier, opts: TDetectOptions, cb);
+
+        inspect(): string;
+
+    }
+
+
+    interface TDetectOptions {
+        scale?: number;
+        neighbors?;
+        min?;
     }
 
     interface IVideoCapture {
         read(cb: (err: Error, mat: IMatrix) => void);
     }
 
-    export function VideoCapture(device: number): IVideoCapture;
-    export function VideoCapture(filename: string): IVideoCapture;
+    export interface ImageDataStream {
+        write(buf);
+        end(b);
+    }
+
+    export interface ImageStream {
+        write(buf);
+    }
+
+    export interface ObjectDetectionStream {
+        write(m);
+    }
+
+    export interface VideoStream {
+        read();
+        pause();
+        resume();
+    }
+
+    export interface INamedWindow {
+        show(im: IMatrix);
+        destroy();
+        blockingWaitKey(time: number): number;
+    }
+
+    export var NamedWindow: {
+        new (name: string): INamedWindow;
+    }
+
+    export var VideoCapture: {
+        new (device: number): IVideoCapture;
+        new (filename: string): IVideoCapture;
+    }
 }

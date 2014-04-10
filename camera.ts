@@ -3,26 +3,24 @@
  */
 
 ///<reference path='def/node.d.ts' />
+///<reference path='def/opencv.d.ts' />
 
-var cv = require('opencv');
+import cv = require('opencv');
 
-var win = new cv.NamedWindow('cam', 1);
-
+var win = new cv.NamedWindow('cam');
+//var capture = new cv.VideoCapture('/dev/video0');
 var capture = new cv.VideoCapture(0);
-//var camera = new cv.VideoCapture(0);
 
 setInterval(function() {
 
-    var img = cv.QueryFrame(capture)
-    cv.ShowImage("camera", img);
-    if (cv.WaitKey(10) == 27) {
-        process.exit(0);
-    }
-//    camera.read(function(err, im) {
-//        console.log(err);
-//        console.log(im);
-//        im.save('cam.png');
-//    });
+    capture.read(function(err, im) {
+        console.log(err);
+        console.log(im);
+        console.log(im.empty());
+        if (!im.empty()) {
+            win.show(im);
+        }
+    });
 
 }, 1000);
 
