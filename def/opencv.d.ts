@@ -221,9 +221,10 @@ declare module "opencv" {
     }
 
     export interface INamedWindow {
-        show(im: IMatrix);
+        //show(name: string, im: IMatrix);
+        show(im: any);
         destroy();
-        blockingWaitKey(time: number): number;
+        blockingWaitKey(time1: number, time2?: number): number;
     }
 
     export var NamedWindow: {
